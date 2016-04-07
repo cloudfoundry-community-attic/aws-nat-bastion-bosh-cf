@@ -233,8 +233,6 @@ jobs:
         port: 5155
         uris:
         - "hm9000.${cf-domain}"
-
-      routes:
       - name: doppler
         registration_interval: 20s
         port: 8081
