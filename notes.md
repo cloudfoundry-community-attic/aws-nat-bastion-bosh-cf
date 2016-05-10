@@ -2,7 +2,7 @@
 
 A small Cloud Foundry with a big punch.
 
-![Ant Man](http://i.annihil.us/u/prod/marvel/movies/antman-full/media/images/02_suit/antman_front_small.png?v=1.4.4)
+![Ant Man](http://i.annihil.us/u/prod/marvel/movies/antman-full/media/images/02_suit/antman_front_small.png?v=1.4.4 =60x)
 
 Setup the pre-requisites, clone this repo, run the commands, and you'll have a fully functional Cloud Foundry to deploy applications on AWS.
 
