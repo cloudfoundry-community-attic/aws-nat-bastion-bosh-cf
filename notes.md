@@ -34,7 +34,7 @@ NOTE: An interesting tool to discover more about IAM Polices is the [IAM Policy 
 
 At AWS, the **Access Key ID and Secret Access Key** are a global ID and token that can be used to authenticate to the services you use.
 
-IF you've not already you can create an [Access Key ID and Secret Access Key](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html).
+If you've not already you can create an [Access Key ID and Secret Access Key](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html).
 
 Otherwise it's in the IAM Dashboard for your User, located under the **Security Credentials** tab.
 
