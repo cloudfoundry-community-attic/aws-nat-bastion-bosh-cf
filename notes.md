@@ -1,10 +1,8 @@
-# Ant-man
-
-A small Cloud Foundry with a big punch.
+# aws-nat-bastion-bosh-cf
 
 Setup the pre-requisites, clone this repo, run the commands, and you'll have a fully functional Cloud Foundry to deploy applications on AWS.
 
-How does it work? [Terraform](https://www.terraform.io/) is used to configure the required networking infrastructure on AWS, next `bosh-init` sets up the BOSH Director, then BOSH will install Cloud Foundry.
+How does it work? [Terraform](https://www.terraform.io/) configures the networking infrastructure on AWS, next `bosh-init` sets up the BOSH Director, then BOSH installs Cloud Foundry.
 
 ## Goals
 
