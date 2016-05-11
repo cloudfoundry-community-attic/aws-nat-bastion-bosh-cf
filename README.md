@@ -14,7 +14,7 @@ How does it work? [Terraform](https://www.terraform.io/) configures the networki
 
 Examples use a Mac OS X operating system.  Ensure the following are setup before continuing.
 
-  * [Amazon Web Services Setup](aws-setup.md)
+  * [Amazon Web Services Setup](docs/aws-setup.md)
   * Mac OS X with [Homebrew](http://brew.sh/)
 
 ## Installation
