@@ -39,7 +39,7 @@ make prepare
 
 Both BOSH and Cloud Foundry expect to find the key named `sshkeys/bosh.pem`.  Rename your public key to match this and copy it to the `sshkeys` folder.
 
-### Configure
+### Configure Terraform
 
 Terraform creates a `plan`.  Then users `apply` the `plan` and the infrastructure is allocated for the given provider.
 
