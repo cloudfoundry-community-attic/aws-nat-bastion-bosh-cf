@@ -1,47 +1,31 @@
-# NAT, Bastion & BOSH Bootstrapping
+# aws-nat-bastion-bosh-cf
 
-This repository contains all of the scripts necessary for bootstrapping a NAT, Bastion & BOSH on AWS.
+Setup the prerequisites, clone this repo, run the commands, and you'll have a fully functional Cloud Foundry to deploy applications on AWS.
 
-Note that throught this effort manual steps will appear anywhere that credentials are required.
+How does it work? [Terraform](https://www.terraform.io/) configures the networking infrastructure on AWS, next `bosh-init` sets up the BOSH Director, then BOSH installs Cloud Foundry.
 
-# Generations
+## Goals
 
-Note that this is the next evolution of the [terraform-aws-cf-install](https://github.com/cloudfoundry-community/terraform-aws-cf-install) project.
+  * Re-sizable - Start small, but can grow as big as you need.  See `config/aws/cf-<size>.yml` for examples.
+  * Accessible - Give users the ability to try Cloud Foundry on AWS as quickly and easily as possible.
+  * Configurable - Manage the deploy manifests with [Spruce](https://github.com/geofffranks/spruce).
 
-It is a separate repository so that important projects using the original repository are not affected by forward progress.
+## Prerequisites
 
-The goals of this evolution are
+The documentation is built around running the commands from a Mac OS X laptop as your workstation.
 
-1. Modular.
-3. Use the new `bosh-init` method for bootstrapping.
-4. Use spruce.
-2. Flexible Sizing (select different sizes of CF to install, even customize your own).
+  * Amazon Web Services account
+  * Mac OS X with [Homebrew](http://brew.sh/)
 
-Terraform is still the tool of choice for for initializing the AWS VPC as well as the NAT and Bastion EC2 instances.
+## 
 
-Note that currently the NAT, Bastion and BOSH Director VMs are intentionally created as small as possible.
-For full production systems it is advised that your Bsation and BOSH Director are larger VMs.
-
-# Preparation
-
-First, this project uses `direnv`, if you do not have `direnv` available please
-first install it: (direnv.net)[http://direnv.net]
-
-Be sure to run `direnv` allow when you change in to this project directory.
-
-
-To prepare the environment in order to run the automation, first run the following:
+, first run the following:
 
 ```sh
 make prepare
 ```
 
-Notes
-* it is assumed that your user has write privileges to `/usr/local/bin`
-* The `direnv` hook adds `./bin` to your PATH in the current shell session only.
-* If you will be finding new stemcell ID's be sure to install `awscli`
-
-# Deploying a BOSH VPC
+## Deploying a BOSH VPC
 
 First you will need to add your credentials to the appropriate location.
 
@@ -75,31 +59,10 @@ In order to *destroy* a previously deployed VPC,
 make destroy
 ```
 
-## EC2 Image ID Updates
+## Related Repositories
 
-We found the AMI ID's by getting the product code from this website.
-Then ran the following code substituting in the product code value:
-```sh
-make centos-ami-ids
-```
-Note that you have to first run `aws configure` to setup your AWS credentials.
-The outputed values should replace the old ones within the `variables.tf` file.
-Specifically the `variable "aws_centos_ami" {` section.
-
-## Troubleshooting
-
-If this message is received:
-```
-Error applying plan:
-
-1 error(s) occurred:
-
-* aws_instance.bastion: Error launching source instance: OptInRequired: In order to use this AWS Marketplace product you need to accept terms and subscribe. To do so please visit http://aws.amazon.com/marketplace/pp?sku=aw0evgkw8e5c1q413zgy5pjce
-	status code: 401, request id:
-
-Terraform does not automatically rollback in the face of errors.
-Instead, your Terraform state file has been partially updated with
-any resources that successfully completed. Please address the error
-above and apply again to incrementally change your infrastructure.
-```
-Go to the URL in the error message and click "Manual Launch" tab (for EC2 APIs / CLI) and click the giant orange button to "Accept Software Terms". Then re-run the commands.
+  * [bosh-init](https://github.com/cloudfoundry/bosh-init)
+  * [spruce](https://github.com/geofffranks/spruce)
+  * [terraform-aws-cf-install](https://github.com/cloudfoundry-community/terraform-aws-cf-install)
+  * [terraform-aws-vpc](https://github.com/cloudfoundry-community/terraform-aws-vpc)
+  * [terraform-aws-cf-net](https://github.com/cloudfoundry-community/terraform-aws-cf-net)
