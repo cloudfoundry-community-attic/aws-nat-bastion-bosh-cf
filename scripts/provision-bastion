@@ -167,11 +167,19 @@ provision_bosh_director() {
     bosh login admin adminpa55
 
     boshDirectorUUID="$(bosh status --uuid)"
+
+	# Recommend SSLIP because it seems more stable
+    if [[ "${cfDomain}" == "SSLIP" ]]
+    then
+      cfDomain="${cfIP}.sslip.io"
+      export SKIP_SSL_VALIDATION="true"
+    fi
     if [[ "${cfDomain}" == "XIP" ]]
     then
       cfDomain="${cfIP}.xip.io"
       export SKIP_SSL_VALIDATION="true"
     fi
+
   } &>>"${HOME}/provision.log"
 }
 
@@ -216,6 +224,11 @@ provision_cf() {
     cp "${HOME}/deployments/cf-${cfSize}.yml" "${HOME}/workspace/deployments/cf-${cfSize}.yml"
     # TODO: Replace this with spruce!!!
 
+    if [[ "${cfDomain}" == "SSLIP" ]]
+    then
+      cfDomain="${cfIP}.sslip.io"
+      export SKIP_SSL_VALIDATION="true"
+    fi
     if [[ "${cfDomain}" == "XIP" ]]
     then
       cfDomain="${cfIP}.xip.io"
@@ -318,6 +331,104 @@ provision_cf_release() {
   } &>>"${HOME}/provision.log"
 }
 
+provision_rdpg_release() {
+  # Upload the bosh release, set the deployment, and execute
+  echo "[provision] RDPG Release..."
+  {
+    bosh upload release --skip-if-exists "https://rdpg-bosh.s3.amazonaws.com/rdpg-0.2.62.tgz"
+    bosh upload release --skip-if-exists "https://github.com/hybris/nxlog-boshrelease/releases/download/v0.3.0/nxlog-0.3.0.tgz"
+    bosh upload release --skip-if-exists "https://github.com/cloudfoundry-community/metrics-boshrelease/releases/download/v1/metrics-1.tgz"
+    bosh upload release "https://github.com/cloudfoundry-community/postgres-smoke-tests-boshrelease/releases/download/v3/postgres-smoke-tests-3.tgz"
+    bosh upload release "https://bosh.io/d/github.com/cloudfoundry-community/route-registrar-boshrelease?v=3"
+
+    # Should use same CentOS stemcell used for BOSH
+
+    bosh deployment "${HOME}/releases/rdpg-deployments/cftiny/sandbox/manifests/manifest.yml"
+    for attempt in {0..2}
+    do
+      echo "Attempting bosh -n deploy (${attempt}/2)"
+      bosh -n deploy
+    done
+  } &>>"${HOME}/provision.log"
+}
+
+provision_redis() {
+    if [[ -f "${HOME}/.rvm/environments/default" ]]
+    then source "${HOME}/.rvm/environments/default" &>/dev/null
+    fi
+    echo "[provision] Bootstrapping Redis..."
+    {
+      cp "${HOME}/deployments/redis-manifest.yml" "${HOME}/workspace/deployments/redi-manifest.yml"
+      # TODO: Replace this with spruce!!!
+
+      if [[ "${cfDomain}" == "SSLIP" ]]
+      then
+        cfDomain="${cfIP}.sslip.io"
+        export SKIP_SSL_VALIDATION="true"
+      fi
+      if [[ "${cfDomain}" == "XIP" ]]
+      then
+        cfDomain="${cfIP}.xip.io"
+        export SKIP_SSL_VALIDATION="true"
+      fi
+
+      # If cfRunSubdomain is set, then use it's value to replace the default subdomain. Otherwise (if empty), don't use a subdomain
+      if [[ -n "${cfRunSubdomain}" ]]
+      then cfRunSubdomainRE="s/run.\${cf-domain}/${cfRunSubdomain}.${cfDomain}/g"
+      else cfRunSubdomainRE="s/run.\${cf-domain}/${cfDomain}/g"
+      fi
+
+      # If cfAppsSubdomain is set, then use it's value to replace the default subdomain. Otherwise (if empty), don't use a subdomain
+      if [[ -n "${cfAppsSubdomain}" ]]
+      then cfAppsSubdomainRE="s/apps.\${cf-domain}/${cfAppsSubdomain}.${cfDomain}/g"
+      else cfAppsSubdomainRE="s/apps.\${cf-domain}/${cfDomain}/g"
+      fi
+
+      boshDirectorUUID="$(bosh status --uuid)"
+
+      echo "We found bosh UUID ${boshDirectorUUID}"
+
+      /bin/sed -i \
+        -e "s/\${network}/${network}/g" \
+        -e "s/\${cf-subnet1-az}/${cfSubnet1AZ}/g" \
+        -e "s/\${cf-subnet2-az}/${cfSubnet2AZ}/g" \
+        -e "s/\${cf-eip}/${cfIP}/g" \
+        -e "s/\${services-subnet1}/${servicesSubnet1}/g" \
+        -e "s/\${services-sg}/${servicesSecurityGroup}/g" \
+        -e "s/\${bosh-director-uuid}/${boshDirectorUUID}/g" \
+        -e "s/\${bosh-subnet}/${boshSubnet}/g" \
+        -e "${cfRunSubdomainRE}" \
+        -e "${cfAppsSubdomainRE}" \
+        -e "s/\${cf-domain}/${cfDomain}/g" \
+        -e "s/\${cf-admin-pass}/${cfAdminPass}/g" \
+        -e "s/\${cf-pass}/${cfPass}/g" \
+        -e "s/\${bosh-stemcell-version}/${cfBOSHUbuntuStemCell}/g" \
+        "${HOME}/workspace/deployments/redis.yml"
+
+      echo "Updated ${HOME}/workspace/deployments/redis-manifest.yml"
+  }
+
+	provision_redis_release
+}
+
+provision_redis_release() {
+  # Upload the bosh release, set the deployment, and execute
+  echo "[provision] RDPG Release..."
+  {
+	bosh upload release --skip-if-exists "https://bosh.io/d/github.com/pivotal-cf/cf-redis-release?v=397"
+
+    # Build redis-deployments/cftiny/sandbox/manifests/manifest.yml
+
+    bosh deployment "${HOME}/releases/redis-deployments/cftiny/sandbox/manifests/manifest.yml"
+    for attempt in {0..2}
+    do
+      echo "Attempting bosh -n deploy (${attempt}/2)"
+      bosh -n deploy
+    done
+  } &>>"${HOME}/provision.log"
+}
+
+
 provision_base() {
   provision_path
   provision_ssh_keys
@@ -342,7 +453,7 @@ destroy_bosh() {
   # Delete the two deployments
   {
     bosh -n delete deployment cf
-    "${HOME}/bin/bosh-init delete ${HOME}/deployments/bosh.yml"
+    ${HOME}/bin/bosh-init delete "${HOME}/deployments/bosh.yml"
   } &>>"${HOME}/provision.log"
 }
 
@@ -436,7 +547,7 @@ cfRunSubdomain=""
 cfAppsSubdomain=""
 cfAdminPass=""
 cfPass=""
-cfBOSHUbuntuStemCell="3215.4"
+cfBOSHUbuntuStemCell="3232.2"
 
 backboneCountZ1=""
 apiCountZ1=""

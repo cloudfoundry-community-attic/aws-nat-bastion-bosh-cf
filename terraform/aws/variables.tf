@@ -35,11 +35,21 @@ variable "aws_centos_ami" {
 }
 
 variable "centos_stemcell_version" {
-  default = "3202"
+  default = "3232.1"
 }
 
+variable "ubuntu_stemcell_version" {
+  default = "3232.2"
+}
+
+# SHA1 can be found with curl stemcell-sha1s.starkandwayne.com/<stemcell>/<version>
+
 variable "centos_stemcell_sha1" {
-  default = "cd678525ae5f45c6d23ba2103094526d2c87f056"
+  default = "226d52ab60dbd62f132795213e32ac67b4a8727e"
+}
+
+variable "ubuntu_stemcell_sha1" {
+  default = "c24ca1e494990aefa2eb236795447b76a9056648"
 }
 
 variable "network" {
@@ -59,7 +69,7 @@ variable "cf" {
   type = "map"
   default =  {
     admin_pass = "adminc1oudc0w"
-    domain = "XIP"
+    domain = "SSLIP"
     run_subdomain = "run"
     apps_subdomain = "apps"
     release_version = "235"
@@ -69,6 +79,7 @@ variable "cf" {
     size = "tiny"
     private_domains = ""
     nats_user = "nats"
+    nats_pass = "natspass"
     pass = "c1oudc0w"
   }
 }

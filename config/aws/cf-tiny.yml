@@ -91,7 +91,7 @@ jobs:
       nats:
         machines: [${network}.04.103]
         password: nats
-        username: nats
+        username: natspass
 
     consul:
       agent:
@@ -145,7 +145,96 @@ jobs:
   properties:
     ha_proxy:
       ssl_pem: |
-        ${cf-haproxy-ssl-pem}
+       -----BEGIN PRIVATE KEY-----
+       MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDF207fiw6ILRcY
+       OSJ2AUX5r7vIMdrW5ll9FzyTiqrhmv6pjNX72eHYLqMAWl3cA08q0Km03N1Nyn5L
+       RY9I31AX22GfE3b/8415dIHFhrkpOVxI6ikkQUZVTCpjnyVm8A45RIdB+C2CQ3F6
+       ax+oXkPJJoUCEcRi2CjcuRUDXoq3ep2rao9SMAFlEKLe0SBYkaQmxmBaqaqZ/NXN
+       6nJGXlLf6a4l/oqzobIgcD2+JrmLFKJ3cck2Em3smHlRsIOjggtQD15f4wu9zeg0
+       hc4VdJBvnQscbEn7AuN/Cx0JYDMWPXYrN+TI3AMEsSfyJeo3YBbKDmlYMU7RoILF
+       BnFTKKfDAgMBAAECggEACHNAYB3BRiGe3eL6zM1rHqnZvEgcz5bQ9Z27cZW3jKEh
+       BT7FmNcKZUBAp/A0GARwKiT1SoswTHU8hZx37SXUduBgv/mF2JKfVTObo0MIv3D6
+       twaBMVI0Xco9+Tk/0LCp+topaLDfyLN2skLG/FriTEH/5kG6AHq47AxfkGBGTmWz
+       +umw4RYZBKhbu2hR1dUNAmyZXj2CfYrCwto6kNlWM76CHR9V2YIgohiwGO/36flV
+       gA8V8BfRP13ui3vUixXC6FnI2NerHUXC9Zw8v6UKdskZHrwSA8lZybhaxv5iVx40
+       akM81rJ1xTGHdh5tZl9Ld1zAbl+uQIU8D1/0Kl0AGQKBgQDuKcaPVNThrRm90S+V
+       OUZjd0Ng2fJ6CV7RtwQtkh0LP2sXWXEWCmFtANeOC9Wup5NgLuptyeKKrD+dLXfg
+       dEmozIOnwlaPWhUOCmVSAx5CfwxklKS8y9NDtccqI0pGkhwB4ClLxRWIFnTjeTes
+       XWh1cjhCZGNRPKgKEG5Vmkew7QKBgQDUrL+7UpmVFfO/2ZW5BZqQZXbC4PGod0Jv
+       gBSxQvGFWxoWDi4/QxdITdixAuNNek1D/DJMaBf8NBMsrkscMgcWf9LxjPJ4GKTN
+       DTUH1c8dY8E5nYeknIpNGUfteIAUcFNAe78EZW24VTGBsTCA6S2EA/JXUuoDDRss
+       dmY2Zl2VbwKBgQDjxvKPbKu5NsuyvhlLF58ZTBwVyfxc+Q9FdUs6pk6+ziWHDFTa
+       poztKmv9/5WbV8vcpqIw5G+U/w5MLgtDkRRNq2OTE4ujyJzwc8LZf//1yvq4S22O
+       30WrsXPM+jl0axL8PD5iqBhisk+SqwEzCZb5FId3//j43hE8puBPYKGGNQKBgHFV
+       4hNEkH4Hpc8OeCCSoOzkdWajE4VQkMH0wpI4d5c2lm88fV7PNSAeBCVIwbMvQu/A
+       /VkEfAu2AKXl+Db9XhOaaOK61xgzIdf4etNDGM2ztGwsy/VoSreNimw9tBuwRF1v
+       1LrWBqOeGvTfZVa9bLkWlVX95KFdoaaPLic9ZA/XAoGAImJYSAv6dZvz9eyg+Npg
+       fxLnuI/jTG5opj4QIlkkeZuQ1XwDCQFACN6+xs65Uww/XOgtCbXN4yutogwD3k56
+       9oibGK3drW7BgCDJXTtosOYDB8aMYdW8kN3ybtNaLki1NiCjl6rDZP2mUqTx/zFs
+       YsJbvyy3m92SXhtvECMNp5Y=
+       -----END PRIVATE KEY-----
+       -----BEGIN CERTIFICATE-----
+       MIIGBDCCBOygAwIBAgISA4ArpZVNU1DaWgHnjiKRczsjMA0GCSqGSIb3DQEBCwUA
+       MEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQD
+       ExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xNjA0MTkxNzU4MDBaFw0x
+       NjA3MTgxNzU4MDBaMCsxKTAnBgNVBAMTIHNlcnZpY2VzbWdtdC41Mi4zOC4xNTcu
+       MzEueGlwLmlvMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxdtO34sO
+       iC0XGDkidgFF+a+7yDHa1uZZfRc8k4qq4Zr+qYzV+9nh2C6jAFpd3ANPKtCptNzd
+       Tcp+S0WPSN9QF9thnxN2//ONeXSBxYa5KTlcSOopJEFGVUwqY58lZvAOOUSHQfgt
+       gkNxemsfqF5DySaFAhHEYtgo3LkVA16Kt3qdq2qPUjABZRCi3tEgWJGkJsZgWqmq
+       mfzVzepyRl5S3+muJf6Ks6GyIHA9via5ixSid3HJNhJt7Jh5UbCDo4ILUA9eX+ML
+       vc3oNIXOFXSQb50LHGxJ+wLjfwsdCWAzFj12KzfkyNwDBLEn8iXqN2AWyg5pWDFO
+       0aCCxQZxUyinwwIDAQABo4IDATCCAv0wDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQW
+       MBQGCCsGAQUFBwMBBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBQb
+       ojm0b5a/u9ivCWbqGqoC8vQ+8DAfBgNVHSMEGDAWgBSoSmpjBH3duubRObemRWXv
+       86jsoTBwBggrBgEFBQcBAQRkMGIwLwYIKwYBBQUHMAGGI2h0dHA6Ly9vY3NwLmlu
+       dC14My5sZXRzZW5jcnlwdC5vcmcvMC8GCCsGAQUFBzAChiNodHRwOi8vY2VydC5p
+       bnQteDMubGV0c2VuY3J5cHQub3JnLzCCAQkGA1UdEQSCAQAwgf2CEzUyLjM4LjE1
+       Ny4zMS54aXAuaW+CF2FwaS41Mi4zOC4xNTcuMzEueGlwLmlvgh1ibG9ic3RvcmUu
+       NTIuMzguMTU3LjMxLnhpcC5pb4IbZG9wcGxlci41Mi4zOC4xNTcuMzEueGlwLmlv
+       ghpobTkwMDAuNTIuMzguMTU3LjMxLnhpcC5pb4IfbG9nZ3JlZ2F0b3IuNTIuMzgu
+       MTU3LjMxLnhpcC5pb4IZbG9naW4uNTIuMzguMTU3LjMxLnhpcC5pb4Igc2Vydmlj
+       ZXNtZ210LjUyLjM4LjE1Ny4zMS54aXAuaW+CF3VhYS41Mi4zOC4xNTcuMzEueGlw
+       LmlvMIH+BgNVHSAEgfYwgfMwCAYGZ4EMAQIBMIHmBgsrBgEEAYLfEwEBATCB1jAm
+       BggrBgEFBQcCARYaaHR0cDovL2Nwcy5sZXRzZW5jcnlwdC5vcmcwgasGCCsGAQUF
+       BwICMIGeDIGbVGhpcyBDZXJ0aWZpY2F0ZSBtYXkgb25seSBiZSByZWxpZWQgdXBv
+       biBieSBSZWx5aW5nIFBhcnRpZXMgYW5kIG9ubHkgaW4gYWNjb3JkYW5jZSB3aXRo
+       IHRoZSBDZXJ0aWZpY2F0ZSBQb2xpY3kgZm91bmQgYXQgaHR0cHM6Ly9sZXRzZW5j
+       cnlwdC5vcmcvcmVwb3NpdG9yeS8wDQYJKoZIhvcNAQELBQADggEBAEIRLcNT55rS
+       ROEOq50P5w4kaQJ+EKNZ9dHs3C4YedyTbpImvFSfH2zR3M8Cj0dXhxfYnyDE8LjN
+       VY8eTafstmIULmqGTwswTquPkHiNIqUkPWFMpDxM3+xIiDa8AEz5i6m/EpKTTtZz
+       Hp4Eh3jM3ZmhsEb2j+QetqtwDKJ3VH+kVyB4KF630XDmvCuEnhNs1jhXjAVvWo0g
+       S0wXLz8mR9M28MdQH0T1GD4JZHCnR+cUmWcWMTtfObexqRl9m9xDJhPyPXDNMnL3
+       bW8cXRNWwPwvgbB2tuz+3rrhqzxhD4ImWHwwSiSvFznu5XIoQzCSH1V15XaRbr6l
+       FRUvWtomWwo=
+       -----END CERTIFICATE-----
+       -----BEGIN CERTIFICATE-----
+       MIIEkjCCA3qgAwIBAgIQCgFBQgAAAVOFc2oLheynCDANBgkqhkiG9w0BAQsFADA/
+       MSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT
+       DkRTVCBSb290IENBIFgzMB4XDTE2MDMxNzE2NDA0NloXDTIxMDMxNzE2NDA0Nlow
+       SjELMAkGA1UEBhMCVVMxFjAUBgNVBAoTDUxldCdzIEVuY3J5cHQxIzAhBgNVBAMT
+       GkxldCdzIEVuY3J5cHQgQXV0aG9yaXR5IFgzMIIBIjANBgkqhkiG9w0BAQEFAAOC
+       AQ8AMIIBCgKCAQEAnNMM8FrlLke3cl03g7NoYzDq1zUmGSXhvb418XCSL7e4S0EF
+       q6meNQhY7LEqxGiHC6PjdeTm86dicbp5gWAf15Gan/PQeGdxyGkOlZHP/uaZ6WA8
+       SMx+yk13EiSdRxta67nsHjcAHJyse6cF6s5K671B5TaYucv9bTyWaN8jKkKQDIZ0
+       Z8h/pZq4UmEUEz9l6YKHy9v6Dlb2honzhT+Xhq+w3Brvaw2VFn3EK6BlspkENnWA
+       a6xK8xuQSXgvopZPKiAlKQTGdMDQMc2PMTiVFrqoM7hD8bEfwzB/onkxEz0tNvjj
+       /PIzark5McWvxI0NHWQWM6r6hCm21AvA2H3DkwIDAQABo4IBfTCCAXkwEgYDVR0T
+       AQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwfwYIKwYBBQUHAQEEczBxMDIG
+       CCsGAQUFBzABhiZodHRwOi8vaXNyZy50cnVzdGlkLm9jc3AuaWRlbnRydXN0LmNv
+       bTA7BggrBgEFBQcwAoYvaHR0cDovL2FwcHMuaWRlbnRydXN0LmNvbS9yb290cy9k
+       c3Ryb290Y2F4My5wN2MwHwYDVR0jBBgwFoAUxKexpHsscfrb4UuQdf/EFWCFiRAw
+       VAYDVR0gBE0wSzAIBgZngQwBAgEwPwYLKwYBBAGC3xMBAQEwMDAuBggrBgEFBQcC
+       ARYiaHR0cDovL2Nwcy5yb290LXgxLmxldHNlbmNyeXB0Lm9yZzA8BgNVHR8ENTAz
+       MDGgL6AthitodHRwOi8vY3JsLmlkZW50cnVzdC5jb20vRFNUUk9PVENBWDNDUkwu
+       Y3JsMB0GA1UdDgQWBBSoSmpjBH3duubRObemRWXv86jsoTANBgkqhkiG9w0BAQsF
+       AAOCAQEA3TPXEfNjWDjdGBX7CVW+dla5cEilaUcne8IkCJLxWh9KEik3JHRRHGJo
+       uM2VcGfl96S8TihRzZvoroed6ti6WqEBmtzw3Wodatg+VyOeph4EYpr/1wXKtx8/
+       wApIvJSwtmVi4MFU5aMqrSDE6ea73Mj2tcMyo5jMd6jmeWUHK8so/joWUoHOUgwu
+       X4Po1QYz+3dszkDqMp4fklxBwXRsW10KXzPMTZ+sOPAveyxindmjkW8lGy+QsRlG
+       PfZ+G6Z6h7mjem0Y+iWlkYcV4PIWL1iwBi8saCbGS5jN2p8M+X+Q7UNKEkROb3N6
+       KOqkqm57TH2H3eDJAkSnh6/DNFu0Qg==
+       -----END CERTIFICATE-----
     router:
       servers:
         z1: [${network}.04.104]
@@ -284,9 +373,9 @@ jobs:
   - name: cf_private
   properties:
     networks:
-      apps:
+      apps: cf_private
   resource_pool: small_z1
-  templates: cf_private
+  templates:
   - { name: acceptance-tests, release: cf }
 
 - name: smoke_tests
@@ -828,7 +917,7 @@ properties:
     shared_secret: ${cf-pass}
   nats:
     machines: [${network}.04.103]
-    password: nats
+    password: natspass
     port: 4222
     user: nats
   ssl:
