@@ -1,19 +1,21 @@
 # aws-nat-bastion-bosh-cf
 
-Setup the pre-requisites, clone this repo, run the commands, and you'll have a fully functional Cloud Foundry to deploy applications on AWS.
+Setup the prerequisites, clone this repo, run the commands, and you'll have a fully functional Cloud Foundry to deploy applications on AWS.
 
 How does it work? [Terraform](https://www.terraform.io/) configures the networking infrastructure on AWS, next `bosh-init` sets up the BOSH Director, then BOSH installs Cloud Foundry.
 
 ## Goals
 
   * Resizable - Start small, but can grow as big as you need.  See `config/aws/cf-<size>.yml` for examples.
-  * Accessable - Give users the ability to try Cloud Foundry on AWS as quickly and easily as possible
+  * Accessable - Give users the ability to try Cloud Foundry on AWS as quickly and easily as possible.
   * Configurable - Manage the deploy manifests with [Spruce](https://github.com/geofffranks/spruce).
 
-## Pre-requisites
+## Prerequisites
+
+The documentation is built around running the commands from a Mac OS X laptop as your workstation.
 
   * Amazon Web Services account
-  * Homebrew
+  * A Mac OS X Homebrew Toolchain (Xcode -> Git -> Homebrew)
 
 ## Amazon Web Services
 
@@ -44,19 +46,22 @@ We use an SSH Key to perform authentication to AWS on your behalf.  You can eith
 
 ### Verify the key
 
-At the top of the page click on Services, then EC2.  Look on the left hand side, under NETWORK & SECURITY and click on Key Pairs.
+When signed into AWS, at the top of the page click on Services, then EC2.  Look on the left hand side, under NETWORK & SECURITY and click on Key Pairs.
 
 The fingerprint for your user should match the output as below.
 
+Change the `path_to_private_key` to the where your private key is located on your local computer.
+
 ```
-openssl pkcs8 -in /Users/tylerbird/code/cloudfoundry-community/aws-nat-bastion-bosh-cf/sshkeys/bosh.pem -inform PEM -outform DER -topk8 -nocrypt | openssl sha1 -c
+openssl pkcs8 -in path_to_private_key -inform PEM -outform DER -topk8 -nocrypt | openssl sha1 -c
 ```
 
-NOTE: AWS keys are region based, so repeat the SSH key steps for each region used: [`us-east-1`,`us-west-1`,`us-west-2`].
+NOTE: AWS keys are region based, so repeat the SSH key steps for each region used: (`us-east-1`,`us-west-1`,`us-west-2`).
 
 ## Related Repositories
 
+  * [bosh-init](https://github.com/cloudfoundry/bosh-init)
+  * [spruce](https://github.com/geofffranks/spruce)
   * [terraform-aws-cf-install](https://github.com/cloudfoundry-community/terraform-aws-cf-install)
   * [terraform-aws-vpc](https://github.com/cloudfoundry-community/terraform-aws-vpc)
   * [terraform-aws-cf-net](https://github.com/cloudfoundry-community/terraform-aws-cf-net)
-
