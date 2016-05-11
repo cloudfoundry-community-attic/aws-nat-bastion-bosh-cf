@@ -35,9 +35,13 @@ The `make prepare` command will install Terraform to your `/usr/local/bin` folde
 make prepare
 ```
 
+### SSH Key
+
+Both BOSH and Cloud Foundry expect to find the key named `sshkeys/bosh.pem`.  Rename your public key to match this and copy it to the `sshkeys` folder.
+
 ### Configure
 
-Terraform creates a `plan`.  Then users `apply` the `plan` and the infrastructure is setup.
+Terraform creates a `plan`.  Then users `apply` the `plan` and the infrastructure is allocated for the given provider.
 
 Configure the `terraform/aws/terraform.tfvars` file and Terraform will know who you are on AWS and where to create it's resources.
 
@@ -47,12 +51,11 @@ Copy the example file to the `terraform.tfvars` file:
 cp terraform/aws/terraform.tfvars.example terraform/aws/terraform.tfvars
 ```
 
-Required fields are marked in the `terraform/aws/terraform.tfvars.example` file.
+Follow the instructions in the example file about any changes that need to be made.
 
-## Create Virtual Private Cloud
+### Create Virtual Private Cloud
 
 Using Terraform now we'll create the AWS Virtual Private Cloud and ancillary gateways, routes and subnets.  For more read about the [network topology](docs/network-topology.md).
-
 
 ```sh
 make plan
@@ -65,7 +68,7 @@ When an apply is complete the output will look something like this:
 Apply complete! Resources: 27 added, 0 changed, 0 destroyed.
 ```
 
-## Provision Bastion Host
+### Provision Bastion Host
 
 A bastion host is a server that sits on a public Internet address and provides a special service.  This server is a jump-box that bridges the connection between public and private subnets.
 
@@ -95,7 +98,11 @@ To reset the Terraform cached files and start over, you can also run:
 make clean
 ```
 
-Check out [terraform debugging](docs/terraform-debugging.md) for more about troubleshooting Terraform errors.
+Check out [terraform debugging](docs/terraform.md#debugging) for more about troubleshooting Terraform errors.
+
+## Next Steps
+
+The next steps will be to establish an SSH connection to the BOSH Director, add releases and perform deploys.
 
 ## Related Repositories
 

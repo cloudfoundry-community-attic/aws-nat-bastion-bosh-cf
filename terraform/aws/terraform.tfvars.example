@@ -1,9 +1,7 @@
 aws_access_key = "PUT_AWS_ACCESS_KEY_HERE"
 aws_secret_key = "PUT_AWS_SECRET_KEY_HERE"
-# Note that the bosh.pem file is your private key which needs
-# to be uploaded to EC2 or what was downloaded from EC2 API/UI.
-aws_key_path = "../../sshkeys/bosh.pem"
-aws_key_name = "bosh"
-aws_region = "us-east-1"
-network = "10.10"
-bosh_type = "ruby" # or "none"; soon "golang"
+aws_key_path = "../../sshkeys/bosh.pem"     # rename your key to bosh.pem
+aws_key_name = "bosh"                       # equal to EC2 Key Pair name
+aws_region = "us-east-1"                    # ensure region is accurate
+network = "10.10"                           # private network per rfc1918
+bosh_type = "ruby"                          # or "none",  soon "golang"

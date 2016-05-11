@@ -1,4 +1,6 @@
-# Terraform Debugging
+# Terraform
+
+## Debugging
 
 In your current shell, to turn on Terraform debugging to `stderr` of your terminal, run:
 
