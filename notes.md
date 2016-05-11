@@ -15,7 +15,7 @@ How does it work? [Terraform](https://www.terraform.io/) configures the networki
 The documentation is built around running the commands from a Mac OS X laptop as your workstation.
 
   * Amazon Web Services account
-  * A Mac OS X Homebrew Toolchain (Xcode -> Git -> Homebrew)
+  * A Mac OS X [Homebrew](http://brew.sh/) Toolchain (Xcode -> Git -> Homebrew)
 
 ## Amazon Web Services
 
@@ -46,17 +46,15 @@ We use an SSH Key to perform authentication to AWS on your behalf.  You can eith
 
 ### Verify the key
 
-When signed into AWS, at the top of the page click on Services, then EC2.  Look on the left hand side, under NETWORK & SECURITY and click on Key Pairs.
-
-The fingerprint for your user should match the output as below.
-
-Change the `path_to_private_key` to the where your private key is located on your local computer.
+You can verify your key is installed correctly by running this command to get the output of your local file's fingerprint.
 
 ```
 openssl pkcs8 -in path_to_private_key -inform PEM -outform DER -topk8 -nocrypt | openssl sha1 -c
 ```
 
-NOTE: AWS keys are region based, so repeat the SSH key steps for each region used: (`us-east-1`,`us-west-1`,`us-west-2`).
+Then sign into AWS. At the top of the page click on Services, then EC2.  Look on the left hand side, under NETWORK & SECURITY and click on Key Pairs.  The fingerprint in the AWS Console for your user should match the output from the command above.
+
+NOTE: Be aware that AWS EC2 keys are region based, and require 2048 bit encryption.
 
 ## Related Repositories
 
