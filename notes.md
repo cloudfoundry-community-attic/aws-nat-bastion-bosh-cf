@@ -17,9 +17,11 @@ The documentation is built around running the commands from a Mac OS X laptop as
   * Amazon Web Services account
   * A Mac OS X [Homebrew](http://brew.sh/) Toolchain (Xcode -> Git -> Homebrew)
 
+We'll guide you through some of the tasks required at Amazon Web Services (AWS), with links to more information.  If you've got at least git installed on a recent mac you can simply get going with Homebrew by running the command on their website and following the instructions.
+
 ## Amazon Web Services
 
-Before you begin please ensure you have created an account or have logged in to Amazon Web Services (AWS).
+Before you begin please ensure you have created an account or have logged in to AWS.
 
 [Create an account](https://aws.amazon.com/free) or [sign in](https://console.aws.amazon.com/console/home).
 
@@ -44,7 +46,7 @@ Otherwise it's in the IAM Dashboard for your User, located under the **Security 
 
 We use an SSH Key to perform authentication to AWS on your behalf.  You can either use an [existing key or generate a key for this purpose](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html).
 
-### Verify the key
+### Verify the Key
 
 You can verify your key is installed correctly by running this command to get the output of your local file's fingerprint.
 
