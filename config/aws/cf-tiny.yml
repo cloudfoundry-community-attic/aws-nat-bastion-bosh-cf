@@ -517,7 +517,7 @@ properties:
     staging_upload_password: ${cf-pass}
     staging_upload_user: staging_upload_user
   ccdb:
-    address: ${network}.04.101
+    address: ${uuacc_db_address}
     databases:
     - {name: ccdb, tag: cc}
     db_scheme: postgres

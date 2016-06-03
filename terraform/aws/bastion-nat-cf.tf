@@ -320,3 +320,30 @@ output "api_resource_pool"             { value = "${var.api_resource_pool}" }
 output "services_resource_pool"        { value = "${var.services_resource_pool}" }
 output "health_resource_pool"          { value = "${var.health_resource_pool}" }
 output "runner_resource_pool"          { value = "${var.runner_resource_pool}" }
+
+
+# RDS for uua and a few other things
+
+resource "aws_db_subnet_group" "uua-cc" {
+    name = "uua-cc"
+    description = "uua-cc subnet groups"
+    subnet_ids = ["${module.vpc.bastion_subnet}", "${module.vpc.aws_subnet_microbosh_id}", "${module.cf-net.aws_subnet_cfruntime-2a_id}", 
+                  "${module.cf-net.aws_subnet_cfruntime-2b_id}"]
+    tags {
+        Name = "UUA-CC rdb subnet group"
+    }
+}
+
+resource "aws_db_instance" "uua-cc" {
+  allocated_storage    = 10
+  engine               = "postgres"
+  instance_class       = "db.t1.micro"
+  name                 = "uuacc" # no dashes allowed in name
+  username             = "ccadmin"
+  password             = "${var.cf.pass}"
+  db_subnet_group_name = "uua-cc"
+  depends_on           = ["aws_db_subnet_group.uua-cc"]
+}
+
+output "uuacc_db_address" { value = "${aws_db_instance.uua-cc.address}" }
+output "uuacc_db_endpoint" { value = "${aws_db_instance.uua-cc.endpoint}" }
