@@ -30,6 +30,18 @@ tf_var() {
   terraform output -state="${STATE_FILE:-${PWD}/terraform.tfstate}" "${1}"
 }
 
+provider() {
+  local _action="${1}"
+  case "${_action}" in
+    (shutdown)
+      shutdown_instances
+      ;;
+    (*)
+      fatal "Unknown provider action '${_action}', expected one of {centos-ami-ids,shutdown}"
+      ;;
+  esac
+}
+
 check_install_terraform()  {
   local _version=0.6.15 _install=false
 
@@ -70,23 +82,6 @@ provision_vpc() {
       terraform apply -var-file terraform.tfvars
       ;;
     (destroy)
-      {
-        _bastionIP="$(tf_var bastion_ip)"
-		if [[ ! -z "${_bastionIP:-}" ]]
-        then
-          # Run bosh director, delete cf and bosh
-	      _keyPath="$(sed -e "s#^~#${HOME}#" < <(tf_var aws_key_path))"
-
-	      _cmd="DEBUG=true \${HOME}/provision destroy"
-	      echo "Running 'provision destroy' on Bastion host"
-	      echo "ssh -t -i ${_keyPath} centos@${_bastionIP} ${_cmd}"
-	      ssh -t -i "${_keyPath}" centos@"${_bastionIP}" "${_cmd}"
-	    fi
-      } || {
-	    echo "Could not connect to destroy BOSH releases and Director"
-	  }
-
-      # Let terraform clean up
       terraform plan -destroy -var-file terraform.tfvars -out terraform.tfplan
       terraform apply terraform.tfplan
       ;;
@@ -316,7 +311,7 @@ provision() {
 
   prepare_cf_tiny_yaml_manifest
   scp_file "/tmp/cf-${_size}.yml" "deployments/cf-${_size}.yml"
-  
+
 	_cmd="DEBUG=true \${HOME}/provision ${_action}"
   ssh -t -i "${_keyPath}" centos@"${_bastionIP}" "${_cmd}"
 }
@@ -344,6 +339,24 @@ find_centos_7_ami_ids() {
   done
 }
 
+shutdown_instances() {
+  aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" | jq -c -r '.Reservations[] .Instances[] .InstanceId' > instance_list
+  echo "You are about to terminate the following instances:"
+  cat instance_list
+  read -r -p "Are you sure? [y/N] " response
+  if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
+  then
+    IFS=$'\n'  # make newlines the separator
+    for i in `cat ./instance_list`; do
+      echo "Shutting down $i"
+      aws ec2 terminate-instances --instance-ids $i
+    done
+  else
+    echo "Nothing shutdown, exiting..."
+  fi
+  unset IFS
+}
+
 main() {
   [[ -z "${DEBUG:-}" ]] || set -x
 
@@ -361,6 +374,9 @@ main() {
       ;;
     (bastion)
       bastion "$@"
+      ;;
+    (provider)
+      provider "$@"
       ;;
     (centos-ami-ids)
       find_centos_7_ami_ids "$@"

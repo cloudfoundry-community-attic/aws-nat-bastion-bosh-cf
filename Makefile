@@ -7,6 +7,9 @@ deploy: apply
 centos-ami-ids:
 	./bin/nbb centos-ami-ids
 
+shutdown:
+	./bin/nbb provider shutdown
+
 prepare:
 	./bin/nbb prepare
 
