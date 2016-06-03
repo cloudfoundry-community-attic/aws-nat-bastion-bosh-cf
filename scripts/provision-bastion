@@ -9,8 +9,8 @@ fatal() { error "$*" ; exit 1 ; }
 provision_path() {
   echo "[provision] Configuring PATH..."
   {
-    if ! [[ -d "${HOME}/bin" ]] 
-    then 
+    if ! [[ -d "${HOME}/bin" ]]
+    then
       mkdir "${HOME}/bin"
       echo 'PATH="$PATH:$HOME/bin"' >> "${HOME}/.bashrc"
     fi
@@ -29,7 +29,7 @@ provision_ssh_keys() {
     then
       touch "${HOME}/.ssh/authorized_keys"
       chmod 0640 "${HOME}/.ssh/authorized_keys"
-      for file in "${HOME}/sshkeys"/* 
+      for file in "${HOME}/sshkeys"/*
       do cat "${file}" >> "${HOME}/.ssh/known_hosts"
       done
       chmod 0600 "${HOME}/.ssh/bosh.pem"
@@ -68,8 +68,8 @@ provision_os_packages() {
 provision_rvm() {
   echo "[provision] Installing RVM..."
   {
-    if [[ ! -d "$HOME/.rvm" ]] 
-    then 
+    if [[ ! -d "$HOME/.rvm" ]]
+    then
       gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
       # curl -sO https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer
       # curl -sO https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer.asc
@@ -101,7 +101,7 @@ provision_bosh_cli() {
     gem install fog-aws -v 0.1.1 --quiet
     gem install bundler bosh_cli --quiet
     bosh -v
-    cat > "${HOME}/.fog" <<EOF 
+    cat > "${HOME}/.fog" <<EOF
     :default:
     :aws_access_key_id: ${awsKeyID}
     :aws_secret_access_key: ${awsAccessKey}
@@ -319,9 +319,9 @@ provision_cf_release() {
   echo "[provision] CF Release..."
   {
     bosh upload release --skip-if-exists "https://bosh.io/d/github.com/cloudfoundry/cf-release?v=${cfReleaseVersion}"
-	
+
 	bosh upload stemcell --skip-if-exists "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=${cfBOSHUbuntuStemCell}"
-	
+
     bosh deployment "${HOME}/workspace/deployments/cf-${cfSize}.yml"
     for attempt in {0..2}
     do
@@ -449,14 +449,6 @@ provision_bosh() {
   provision_bosh_director
 }
 
-destroy_bosh() {
-  # Delete the two deployments
-  {
-    bosh -n delete deployment cf
-    ${HOME}/bin/bosh-init delete "${HOME}/deployments/bosh.yml"
-  } &>>"${HOME}/provision.log"
-}
-
 install_cf_cli () {
   echo "[provision] Installing Cloud Foundry CLI..."
   {
@@ -500,7 +492,6 @@ main() {
     (base)          provision_base ;;
     (bosh)          provision_bosh ;;
     (cf)            provision_cf   ;;
-    (destroy)       destroy_bosh   ;;
     (cf_cli)        install_cf_cli ;;
     (all)
       provision_base
@@ -519,7 +510,7 @@ main() {
 action="${1}"
 shift || fail "action required as first argument."
 
-# Note that the values of the variables below are filled in before this 
+# Note that the values of the variables below are filled in before this
 # template file is rendered and placed on the bastion server.
 awsKeyID=""
 awsAccessKey=""
