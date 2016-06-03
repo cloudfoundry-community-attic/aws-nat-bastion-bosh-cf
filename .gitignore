@@ -1,4 +1,4 @@
-instance_list
+/instance_list*
 sshkeys/*
 terraform.tfvars
 .ssh/*.pem
