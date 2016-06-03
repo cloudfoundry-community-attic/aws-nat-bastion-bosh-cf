@@ -18,7 +18,6 @@ In your local code folder clone the repo, then change to that folder.
 
 ```sh
 git clone https://github.com/cloudfoundry-community/aws-nat-bastion-bosh-cf.git
-cd aws-nat-bastion-bosh-cf
 ```
 
 ### External Dependencies
@@ -27,9 +26,21 @@ Examples use a Mac OS X operating system.  Ensure the following are setup before
 
   * [Amazon Web Services Setup](docs/aws-setup.md)
   * Mac OS X with [Homebrew](http://brew.sh/)
+  * Mac OS X with direnv
 
 Homebrew will be used to install other third party software such as terraform or make
 
+if direnv does not exist on your compuier, install it
+for Mac OS X using homebrew
+
+  * brew install direnv
+
+If the brew install fails, then download the latest release of [direnv](https://github.com/direnv/direnv/releases "direnv releases")
+
+  1. download the appropriate release.  For this example we will use direnv.darwin.amd64 
+  2. chmod 755 direnv.darwin.amd64
+  3. mv direnv.darwin.amd64 direnv
+  4. mv direnv /usr/local/bin 
 
 ## Installation
 
@@ -38,6 +49,7 @@ Homebrew will be used to install other third party software such as terraform or
 The `make prepare` command will install Terraform to your `/usr/local/bin` folder.
 
 ```sh
+cd aws-nat-bastion-bosh-cf
 make prepare
 ```
 
