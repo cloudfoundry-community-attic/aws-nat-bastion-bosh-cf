@@ -340,7 +340,7 @@ find_centos_7_ami_ids() {
 }
 
 shutdown_instances() {
-  aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" | jq -c -r '.Reservations[] .Instances[] .InstanceId' > instance_list
+  aws ec2 describe-instances --filters "Name=tag:Name,Values=bastion,nat,bosh/0" | jq -c -r '.Reservations[] .Instances[] .InstanceId' > instance_list
   echo "You are about to terminate the following instances:"
   cat instance_list
   read -r -p "Are you sure? [y/N] " response
