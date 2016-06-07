@@ -33,11 +33,14 @@ tf_var() {
 provider() {
   local _action="${1}"
   case "${_action}" in
+    (show)
+      show_instances
+      ;;
     (shutdown)
       shutdown_instances
       ;;
     (*)
-      fatal "Unknown provider action '${_action}', expected one of {centos-ami-ids,shutdown}"
+      fatal "Unknown provider action '${_action}', expected one of {centos-ami-ids,show,shutdown}"
       ;;
   esac
 }
@@ -339,10 +342,18 @@ find_centos_7_ami_ids() {
   done
 }
 
+show_instances() {
+  if [[ $# -eq 0 ]]; then
+    aws ec2 describe-tags | jq -r -c '.Tags[] | select (.Key | contains("Name")) | select (.ResourceType | contains("instance")) '
+  else
+    aws ec2 describe-tags | jq -r '.Tags[] | select (.Key | contains("Name")) | select (.ResourceType | contains("instance"))  | .ResourceId ' > ${1}
+  fi
+}
+
 shutdown_instances() {
-  aws ec2 describe-instances --filters "Name=tag:Name,Values=bastion,nat,bosh/0" | jq -c -r '.Reservations[] .Instances[] .InstanceId' > instance_list
-  echo "You are about to terminate the following instances:"
+  show_instances instance_list
   cat instance_list
+  echo "You are about to terminate the above the instances."
   read -r -p "Are you sure? [y/N] " response
   if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
   then
