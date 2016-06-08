@@ -9,8 +9,8 @@ variable "aws_region" {
 variable "bosh" {
   type = "map"
   default =  {
-    version = "255.2"
-    sha1 = "b08fefd771b33f209c3b844b5d316429523c78b1"
+    version = "256.2"
+    sha1 = "ff2f4e16e02f66b31c595196052a809100cfd5a8"
     aws_cpi_version = "48"
     aws_cpi_sha1 = "2abfa1bed326238861e247a10674acf4f7ac48b8"
     type = "ruby"
