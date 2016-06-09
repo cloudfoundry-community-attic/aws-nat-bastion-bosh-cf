@@ -1,8 +1,9 @@
+/instance_list*
+sshkeys/*
 terraform.tfvars
+.ssh/*.pem
 .terraform/
+*.md.html
 *.tfplan
 *.tfstate
 *.tfstate.backup
-*.md.html
-.ssh/*.pem
-sshkeys/*

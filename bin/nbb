@@ -30,6 +30,54 @@ tf_var() {
   terraform output -state="${STATE_FILE:-${PWD}/terraform.tfstate}" "${1}"
 }
 
+provider() {
+  local _action="${1}"
+  case "${_action}" in
+    (show)
+      show_instances
+      ;;
+    (shutdown)
+      shutdown_instances
+      ;;
+    (*)
+      fatal "Unknown provider action '${_action}', expected one of {centos-ami-ids,show,shutdown}"
+      ;;
+  esac
+}
+
+install_dependencies() {
+  # for each binary we define a version, binary name, and version check.
+  brew update
+  check_install "Terraform v0.6.16" terraform "terraform -v"
+  check_install jq-1.5 jq "jq --version"
+  check_install 2.8.1 direnv "direnv version"
+  echo "Dependencies checked or installed, proceed to next step."
+}
+
+check_install() {
+  local _version=${1} _install=false _bin=${2} _check=${3}
+
+  log "Checking for ${_bin} ... "
+  if [[ `which ${_bin}` -eq 1 ]]
+  then
+    install=true
+  else
+    if [[ "${_check}" != "${_version}" ]]
+    then
+      _install=true
+    fi
+  fi
+
+  if [[ ${_install} == true ]]
+  then
+    log "Installing ${_bin} ${_version} ..."
+    brew install ${_bin}
+    log "OK, ${_bin} ${_version} installed."
+  else
+    log "OK, ${_bin} is ${_version}"
+  fi
+}
+
 check_install_terraform()  {
   local _version=0.6.15 _install=false
 
@@ -70,23 +118,6 @@ provision_vpc() {
       terraform apply -var-file terraform.tfvars
       ;;
     (destroy)
-      {
-        _bastionIP="$(tf_var bastion_ip)"
-		if [[ ! -z "${_bastionIP:-}" ]]
-        then
-          # Run bosh director, delete cf and bosh
-	      _keyPath="$(sed -e "s#^~#${HOME}#" < <(tf_var aws_key_path))"
-
-	      _cmd="DEBUG=true \${HOME}/provision destroy"
-	      echo "Running 'provision destroy' on Bastion host"
-	      echo "ssh -t -i ${_keyPath} centos@${_bastionIP} ${_cmd}"
-	      ssh -t -i "${_keyPath}" centos@"${_bastionIP}" "${_cmd}"
-	    fi
-      } || {
-	    echo "Could not connect to destroy BOSH releases and Director"
-	  }
-
-      # Let terraform clean up
       terraform plan -destroy -var-file terraform.tfvars -out terraform.tfplan
       terraform apply terraform.tfplan
       ;;
@@ -316,7 +347,7 @@ provision() {
 
   prepare_cf_tiny_yaml_manifest
   scp_file "/tmp/cf-${_size}.yml" "deployments/cf-${_size}.yml"
-  
+
 	_cmd="DEBUG=true \${HOME}/provision ${_action}"
   ssh -t -i "${_keyPath}" centos@"${_bastionIP}" "${_cmd}"
 }
@@ -344,26 +375,59 @@ find_centos_7_ami_ids() {
   done
 }
 
+show_instances() {
+  if [[ $# -eq 0 ]]; then
+    aws ec2 describe-tags | jq -r -c '.Tags[] | select (.Key | contains("Name")) | select (.ResourceType | contains("instance")) '
+  else
+    aws ec2 describe-tags | jq -r '.Tags[] | select (.Key | contains("Name")) | select (.ResourceType | contains("instance"))  | .ResourceId ' > ${1}
+  fi
+}
+
+shutdown_instances() {
+  show_instances instance_list
+  cat instance_list
+  echo "You are about to terminate the above the instances."
+  echo "WARNING:  This may include instances booted outside of Terraform.  Please double check the list if needed"
+  read -r -p "Are you sure? [y/N] " response
+  if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
+  then
+    IFS=$'\n'  # make newlines the separator
+    for i in `cat ./instance_list`; do
+      echo "Shutting down $i"
+      aws ec2 terminate-instances --instance-ids $i
+    done
+  else
+    echo "Nothing shutdown, exiting..."
+  fi
+  unset IFS
+}
+
 main() {
   [[ -z "${DEBUG:-}" ]] || set -x
 
   action="$1"
   shift || true
   case "${action}" in
-    (vpc)
-      provision_vpc "$@"
-      ;;
-    (prepare)
-      check_install_terraform
-      ;;
-    (provision)
-      provision "$@"
+    (centos-ami-ids)
+      find_centos_7_ami_ids "$@"
       ;;
     (bastion)
       bastion "$@"
       ;;
-    (centos-ami-ids)
-      find_centos_7_ami_ids "$@"
+    (install-dependencies)
+      install_dependencies
+      ;;
+    (prepare)
+      check_install_terraform
+      ;;
+    (provider)
+      provider "$@"
+      ;;
+    (provision)
+      provision "$@"
+      ;;
+    (vpc)
+      provision_vpc "$@"
       ;;
     (*|help|-h)
       usage

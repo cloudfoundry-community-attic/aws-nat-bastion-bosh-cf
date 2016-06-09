@@ -9,13 +9,13 @@ variable "aws_region" {
 variable "bosh" {
   type = "map"
   default =  {
-    version = "255.2"
-    sha1 = "b08fefd771b33f209c3b844b5d316429523c78b1"
-    aws_cpi_version = "48"
-    aws_cpi_sha1 = "2abfa1bed326238861e247a10674acf4f7ac48b8"
+    version = "256.2"
+    sha1 = "ff2f4e16e02f66b31c595196052a809100cfd5a8"
+    aws_cpi_version = "53"
+    aws_cpi_sha1 = "3a5988bd2b6e951995fe030c75b07c5b922e2d59"
     type = "ruby"
     director_vm_size = "m3.medium"
-    init_version = "0.0.81"
+    init_version = "0.0.92"
   }
 }
 

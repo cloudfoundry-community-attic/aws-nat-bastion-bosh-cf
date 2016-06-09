@@ -1,5 +1,13 @@
 # Terraform
 
+## Clean Terraform Cache
+
+To reset the Terraform cached files and start over:
+
+```sh
+make clean
+```
+
 ## Debugging
 
 In your current shell, to turn on Terraform debugging to `stderr` of your terminal, run:

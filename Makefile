@@ -7,6 +7,9 @@ deploy: apply
 centos-ami-ids:
 	./bin/nbb centos-ami-ids
 
+install-dependencies:
+	./bin/nbb install-dependencies
+
 prepare:
 	./bin/nbb prepare
 
@@ -21,6 +24,12 @@ destroy:
 
 clean:
 	./bin/nbb vpc clean
+
+provider-show:
+	./bin/nbb provider show
+
+provider-shutdown:
+	./bin/nbb provider shutdown
 
 provision:
 	./bin/nbb provision all

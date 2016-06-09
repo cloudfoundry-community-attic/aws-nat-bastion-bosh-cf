@@ -1,16 +1,12 @@
 ## EC2 Image ID Updates
 
-[Install the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html).
-
 Run `aws configure` to setup your AWS credentials for your current region.
 
 ```sh
-make centos-ami-ids
+make provider-centos-ami-ids
 ```
 
-When you run `make centos-ami-ids` replaces the block in the `terraform/aws/variables.tf` file.
-
-TODO: Check to see if it replaces all of them or only the region you are signed into.
+When you run `make provider-centos-ami-ids` replaces the block in `terraform/aws/variables.tf`.
 
 ```
 variable "aws_centos_ami" {
